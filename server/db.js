@@ -9,18 +9,18 @@ function initDb(dbPath) {
     CREATE TABLE IF NOT EXISTS games (
       id            TEXT PRIMARY KEY,
       title         TEXT NOT NULL,
-      genre         TEXT,
-      platforms     TEXT,
-      multiplayer   TEXT,
+      description   TEXT,
       developer     TEXT,
       publisher     TEXT,
       release_year  INTEGER,
       metacritic    INTEGER,
+      genre         TEXT,
+      platforms     TEXT,
+      multiplayer   TEXT,
       tier          TEXT,
       added_date    TEXT,
       leaving_date  TEXT,
       image_url     TEXT,
-      description   TEXT,
       last_synced   TEXT
     );
 

@@ -68,8 +68,8 @@ function parseProduct(product) {
 function upsertGames(db, games) {
   const stmt = db.prepare(`
     INSERT INTO games (id, title, description, developer, publisher, release_year,
-                       metacritic, genre, platforms, multiplayer, tier, image_url,
-                       added_date, leaving_date, last_synced)
+                       metacritic, genre, platforms, multiplayer, tier, added_date,
+                       leaving_date, image_url, last_synced)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       title        = excluded.title,
@@ -89,8 +89,8 @@ function upsertGames(db, games) {
       const exists = db.prepare('SELECT 1 FROM games WHERE id = ?').get(g.id)
       stmt.run(
         g.id, g.title, g.description, g.developer, g.publisher, g.release_year,
-        g.metacritic, g.genre, g.platforms, g.multiplayer, g.tier, g.image_url,
-        g.added_date, g.leaving_date, g.last_synced
+        g.metacritic, g.genre, g.platforms, g.multiplayer, g.tier, g.added_date,
+        g.leaving_date, g.image_url, g.last_synced
       )
       if (!exists) added++
     }
