@@ -1,0 +1,32 @@
+{
+  "name": "gamepass-search",
+  "version": "1.0.0",
+  "description": "Xbox Game Pass browser",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build",
+    "preview": "cross-env NODE_ENV=production electron .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "electron": "^30.0.9",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.6.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^15.0.6",
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "jsdom": "^24.0.0",
+    "supertest": "^7.0.0",
+    "vite": "^5.2.11",
+    "vitest": "^1.5.3",
+    "wait-on": "^7.2.0"
+  }
+}
