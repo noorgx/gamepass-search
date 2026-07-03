@@ -17,6 +17,6 @@ export default defineConfig({
     environmentMatchGlobs: [
       ['src/**', 'jsdom'],
     ],
-    setupFiles: ['./src/test-setup.js'],
+    setupFiles: ['./src/test-setup.js', './server/test-setup.js'],
   },
 })
