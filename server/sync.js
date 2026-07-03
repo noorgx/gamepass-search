@@ -104,11 +104,17 @@ async function syncCatalog(db) {
   const products = await fetchGameDetails(ids)
   const games = products.map(parseProduct)
   const { added } = upsertGames(db, games)
+
+  // Prune games no longer in catalog
+  const idList = ids.map(() => '?').join(',')
+  const removeResult = db.prepare(`DELETE FROM games WHERE id NOT IN (${idList})`).run(...ids)
+  const removed = removeResult.changes
+
   const synced_at = new Date().toISOString()
   db.prepare(
     'INSERT INTO sync_log (synced_at, games_added, games_removed) VALUES (?, ?, ?)'
-  ).run(synced_at, added, 0)
-  return { added, removed: 0, synced_at }
+  ).run(synced_at, added, removed)
+  return { added, removed, synced_at }
 }
 
 module.exports = { fetchGamePassIds, fetchGameDetails, parseProduct, upsertGames, syncCatalog }

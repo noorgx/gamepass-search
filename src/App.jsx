@@ -8,12 +8,13 @@ import { useGames } from './hooks/useGames'
 
 export default function App() {
   const { filters, updateFilter, resetFilters } = useFilters()
-  const { games, total, loading, page, setPage, LIMIT } = useGames(filters)
+  const [syncVersion, setSyncVersion] = useState(0)
+  const { games, total, loading, page, setPage, LIMIT } = useGames(filters, syncVersion)
   const [selectedGame, setSelectedGame] = useState(null)
 
   return (
     <div className="app">
-      <Header total={total} />
+      <Header total={total} onSyncComplete={() => setSyncVersion(v => v + 1)} />
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <FilterSidebar filters={filters} onUpdate={updateFilter} onReset={resetFilters} />
         <GameGrid

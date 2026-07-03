@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 const API = 'http://localhost:3847'
 export const LIMIT = 50
 
-export function useGames(filters) {
+export function useGames(filters, syncVersion = 0) {
   const [games, setGames] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -35,6 +35,7 @@ export function useGames(filters) {
         p.set('offset', page * LIMIT)
 
         const res = await fetch(`${API}/api/games?${p}`)
+        if (!res.ok) throw new Error(`API error: ${res.status}`)
         const data = await res.json()
         if (!cancelled) { setGames(data.games); setTotal(data.total) }
       } catch (err) {
@@ -45,7 +46,7 @@ export function useGames(filters) {
     }
     load()
     return () => { cancelled = true }
-  }, [JSON.stringify(filters), page])
+  }, [JSON.stringify(filters), page, syncVersion])
 
   return { games, total, loading, error, page, setPage, LIMIT }
 }

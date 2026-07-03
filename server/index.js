@@ -18,8 +18,9 @@ function startServer(port, db) {
   app.use('/api/games', gamesRouter)
   app.use('/api/sync', createSyncRouter(syncCatalog))
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const server = app.listen(port, '127.0.0.1', () => resolve(server))
+    server.on('error', reject)
   })
 }
 

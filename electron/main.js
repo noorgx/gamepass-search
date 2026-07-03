@@ -15,7 +15,14 @@ function getDbPath() {
 
 app.whenReady().then(async () => {
   const db = initDb(getDbPath())
-  await startServer(API_PORT, db)
+  try {
+    await startServer(API_PORT, db)
+  } catch (err) {
+    const { dialog } = require('electron')
+    dialog.showErrorBox('Startup Error', `Could not start API server on port ${API_PORT}.\n\n${err.message}`)
+    app.quit()
+    return
+  }
 
   // Background sync — don't block window creation
   syncCatalog(db).catch(err => console.error('Sync error:', err))

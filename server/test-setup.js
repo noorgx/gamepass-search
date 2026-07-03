@@ -304,9 +304,9 @@ class MockDatabase {
             // Extract LIMIT and OFFSET from end of SQL
             const limitOffsetMatch = sqlStr.match(/LIMIT\s+(\d+|\?)\s+OFFSET\s+(\d+|\?)|OFFSET\s+(\d+|\?)\s+LIMIT\s+(\d+|\?)/i);
 
+            const allQMarks = sqlStr.match(/\?/g) || [];
             if (limitMatch && offsetMatch) {
               // Find which args are limit and offset by parsing from the end
-              const allQMarks = sqlStr.match(/\?/g) || [];
               const limitIdx = allQMarks.length - 2;  // Second to last
               const offsetIdx = allQMarks.length - 1; // Last
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 const API = 'http://localhost:3847'
 
-export default function Header({ total }) {
+export default function Header({ total, onSyncComplete }) {
   const [status, setStatus] = useState({ last_synced: null })
   const [syncing, setSyncing] = useState(false)
 
@@ -19,6 +19,7 @@ export default function Header({ total }) {
       await fetch(`${API}/api/sync`, { method: 'POST' })
       const s = await fetch(`${API}/api/sync/status`).then(r => r.json())
       setStatus(s)
+      onSyncComplete?.()
     } finally {
       setSyncing(false)
     }
