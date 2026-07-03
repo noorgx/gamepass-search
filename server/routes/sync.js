@@ -1,5 +1,5 @@
-const { Router } = require('express')
-const { syncCatalog } = require('../sync')
+import { Router } from 'express'
+import { syncCatalog } from '../sync.js'
 
 const router = Router()
 
@@ -20,4 +20,4 @@ router.get('/status', (req, res) => {
   res.json({ last_synced: row?.synced_at ?? null, total })
 })
 
-module.exports = router
+export default router

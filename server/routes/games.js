@@ -1,4 +1,4 @@
-const { Router } = require('express')
+import { Router } from 'express'
 
 const router = Router()
 
@@ -70,4 +70,4 @@ router.get('/:id', (req, res) => {
   res.json(game)
 })
 
-module.exports = router
+export default router

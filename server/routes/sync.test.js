@@ -1,24 +1,12 @@
-// Mock the sync module using vi.mock pattern with Module override
+// Mock the sync module FIRST - before any imports
 vi.mock('../sync', () => ({
   syncCatalog: vi.fn().mockResolvedValue({ added: 5, removed: 1, synced_at: '2026-07-03T10:00:00.000Z' })
 }))
 
-// Module override needed for CommonJS mocking to work in this test environment
-const Module = require('module')
-const originalRequire = Module.prototype.require
-Module.prototype.require = function(id) {
-  if (id === '../sync' || id.endsWith('/server/sync.js')) {
-    return {
-      syncCatalog: async (db) => ({ added: 5, removed: 1, synced_at: '2026-07-03T10:00:00.000Z' })
-    }
-  }
-  return originalRequire.apply(this, arguments)
-}
-
-const express = require('express')
-const request = require('supertest')
-const { initDb } = require('../db')
-const syncRouter = require('./sync')
+import express from 'express'
+import request from 'supertest'
+import { initDb } from '../db.js'
+import syncRouter from './sync.js'
 
 function makeApp(db) {
   const app = express()
