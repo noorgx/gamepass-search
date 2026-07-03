@@ -31,6 +31,10 @@ function initDb(dbPath) {
       games_removed INTEGER DEFAULT 0
     );
   `)
+  // Migrations — safe to run on existing DBs
+  try { db.exec('ALTER TABLE games ADD COLUMN genre_tags TEXT') } catch (_) {}
+  try { db.exec('ALTER TABLE games ADD COLUMN embedding TEXT') } catch (_) {}
+
   _db = db
   return db
 }

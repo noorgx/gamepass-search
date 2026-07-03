@@ -10,7 +10,6 @@ export function useGames(filters, syncVersion = 0) {
   const [error, setError] = useState(null)
   const [page, setPage] = useState(0)
 
-  // Reset to first page when filters change
   useEffect(() => { setPage(0) }, [JSON.stringify(filters)])
 
   useEffect(() => {
@@ -20,18 +19,22 @@ export function useGames(filters, syncVersion = 0) {
       setError(null)
       try {
         const p = new URLSearchParams()
-        if (filters.q) p.set('q', filters.q)
-        if (filters.genre.length) p.set('genre', filters.genre.join(','))
-        if (filters.platform.length) p.set('platform', filters.platform.join(','))
-        if (filters.multiplayer.length) p.set('multiplayer', filters.multiplayer.join(','))
-        if (filters.tier.length) p.set('tier', filters.tier.join(','))
-        if (filters.yearMin) p.set('yearMin', filters.yearMin)
-        if (filters.yearMax) p.set('yearMax', filters.yearMax)
-        if (filters.metaMin) p.set('metaMin', filters.metaMin)
-        if (filters.metaMax) p.set('metaMax', filters.metaMax)
-        if (filters.newOnly) p.set('newOnly', 'true')
-        if (filters.leavingSoon) p.set('leavingSoon', 'true')
-        p.set('limit', LIMIT)
+        if (filters.q)                    p.set('q', filters.q)
+        if (filters.genreTag?.length)     p.set('genreTag',    filters.genreTag.join(','))
+        if (filters.genreTagExclude?.length) p.set('genreTagExclude', filters.genreTagExclude.join(','))
+        if (filters.platform?.length)     p.set('platform',    filters.platform.join(','))
+        if (filters.platformExclude?.length) p.set('platformExclude', filters.platformExclude.join(','))
+        if (filters.multiplayer?.length)  p.set('multiplayer', filters.multiplayer.join(','))
+        if (filters.multiplayerExclude?.length) p.set('multiplayerExclude', filters.multiplayerExclude.join(','))
+        if (filters.tier?.length)         p.set('tier',    filters.tier.join(','))
+        if (filters.tierExclude?.length)  p.set('tierExclude', filters.tierExclude.join(','))
+        if (filters.yearMin)  p.set('yearMin', filters.yearMin)
+        if (filters.yearMax)  p.set('yearMax', filters.yearMax)
+        if (filters.metaMin)  p.set('metaMin', filters.metaMin)
+        if (filters.metaMax)  p.set('metaMax', filters.metaMax)
+        if (filters.newOnly)      p.set('newOnly', 'true')
+        if (filters.leavingSoon)  p.set('leavingSoon', 'true')
+        p.set('limit',  LIMIT)
         p.set('offset', page * LIMIT)
 
         const res = await fetch(`${API}/api/games?${p}`)

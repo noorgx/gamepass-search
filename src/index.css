@@ -1,54 +1,325 @@
+/* ── Design System Tokens (dark mode) ─────────────────────────────── */
 :root {
-  --bg: #0f0f13;
-  --surface: #1a1a24;
-  --border: #2a2a3a;
-  --accent: #107c10;
-  --accent-leaving: #c50f1f;
-  --accent-new: #107c10;
-  --text: #f0f0f0;
-  --text-muted: #888;
-  --sidebar-width: 280px;
+  /* Neutrals */
+  --neutral-primary:           #050010;
+  --neutral-primary-soft:      #0A0118;
+  --neutral-primary-medium:    #14082E;
+  --neutral-primary-strong:    #1F1340;
+  --neutral-secondary-soft:    #0A0118;
+  --neutral-secondary-medium:  #14082E;
+  --neutral-tertiary-soft:     #0A0118;
+  --neutral-quaternary:        #1F1340;
+
+  /* Brand */
+  --brand:                     #6633FF;
+  --brand-soft:                #2D0099;
+  --brand-softer:              #1A0066;
+  --brand-medium:              #2D0099;
+  --brand-strong:              #4503FF;
+  --secondary-brand:           #B070FF;
+  --secondary-brand-soft:      #44178F;
+  --secondary-brand-softer:    #2A0F5C;
+  --tertiary-brand:            #7DEDA9;
+  --tertiary-brand-soft:       #0A4F2E;
+  --tertiary-brand-softer:     #052E1A;
+  --tertiary-brand-strong:     #C3FBDC;
+  --quaternary-brand:          #94BFEA;
+  --quaternary-brand-soft:     #1A4173;
+  --quaternary-brand-softer:   #0E2748;
+  --quaternary-brand-strong:   #A9CDF1;
+
+  /* Status */
+  --danger:                    #FF5555;
+  --danger-soft:               #4D0202;
+  --danger-medium:             #8B0808;
+  --success:                   #1FC11B;
+  --success-soft:              #052E1A;
+  --warning:                   #FFD913;
+  --warning-soft:              #5C3A02;
+
+  /* Text */
+  --heading:                   #FFFFFF;
+  --body:                      #C7C7DE;
+  --body-subtle:               #A09BC4;
+  --fg-brand:                  #B49AFF;
+  --fg-brand-strong:           #D0BFFF;
+  --fg-brand-subtle:           #2D0099;
+  --fg-disabled:               #5C4F8A;
+  --fg-purple:                 #B070FF;
+  --fg-purple-strong:          #DDC4FF;
+  --fg-danger:                 #FF5555;
+  --fg-danger-strong:          #FF8888;
+  --fg-success:                #1FC11B;
+  --fg-success-strong:         #7DEDA9;
+  --fg-warning:                #FFE680;
+
+  /* Borders */
+  --border-default:            #FFFFFF;
+  --border-brand:              #B49AFF;
+  --border-brand-subtle:       #2D0099;
+  --border-brand-light:        #6633FF;
+  --border-danger:             #FF5555;
+  --border-success:            #1FC11B;
+  --border-warning:            #FFD913;
+  --border-dark:               #2C1D55;
+  --border-light:              #0A0118;
+  --border-buffer:             #050010;
+
+  /* Utility */
+  --dark:                      #0A0118;
+  --dark-strong:               #1F1340;
+  --disabled:                  #14082E;
+
+  /* Shadows */
+  --brand-ring-shadow:
+    0 0 0 3px  var(--brand),
+    0 0 0 6px  var(--secondary-brand),
+    0 0 0 9px  var(--tertiary-brand),
+    0 0 0 12px var(--quaternary-brand),
+    0 0 0 15px var(--danger);
+
+  --sidebar-width: 260px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── Global ─────────────────────────────────────────────────────────── */
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-family: 'VT323', monospace;
+  background: var(--neutral-primary);
+  color: var(--body);
   height: 100vh;
   overflow: hidden;
+  font-size: 18px;
+  line-height: 1.4;
 }
 
 #root { height: 100vh; display: flex; flex-direction: column; }
+.app  { display: flex; flex-direction: column; height: 100vh; }
 
-.app { display: flex; flex-direction: column; height: 100vh; }
-
-button {
+/* ── Buttons ────────────────────────────────────────────────────────── */
+/* Brand pill (primary) */
+.btn {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  font-weight: 400;
+  border-radius: 9999px;
+  border: 6px solid var(--border-brand-subtle);
+  background: var(--neutral-primary-medium);
+  color: var(--fg-brand);
+  padding: 0.8em 2.2em;
   cursor: pointer;
+  position: relative;
+  box-shadow: 0 8px 0 0 var(--brand);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(8px);
+  box-shadow: none;
+  border-color: var(--border-brand-light);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  background: var(--disabled);
+  border-color: var(--border-light);
+  color: var(--fg-disabled);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Ghost */
+.btn-ghost {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  font-weight: 400;
+  border-radius: 9999px;
   border: none;
-  border-radius: 4px;
-  font-size: 13px;
-  padding: 6px 12px;
-  background: var(--accent);
+  background: transparent;
+  color: var(--heading);
+  padding: 0.8em 2.2em;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--neutral-secondary-medium);
+}
+
+.btn-ghost:disabled {
+  color: var(--fg-disabled);
+  cursor: not-allowed;
+}
+
+/* Small ghost — pagination */
+.btn-page {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  font-weight: 400;
+  border: 2px solid var(--border-default);
+  background: var(--neutral-primary-soft);
+  color: var(--heading);
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-page:hover:not(:disabled) {
+  background: var(--brand-softer);
+  color: var(--fg-brand-strong);
+}
+
+.btn-page.active {
+  background: var(--brand);
   color: #fff;
+  border-color: var(--border-brand);
 }
 
-button:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-page:disabled {
+  color: var(--fg-disabled);
+  cursor: not-allowed;
+}
 
-input[type="text"], input[type="number"] {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  padding: 6px 10px;
-  font-size: 13px;
+.btn-page-label {
+  width: auto;
+  padding: 0 16px;
+}
+
+/* ── Inputs ─────────────────────────────────────────────────────────── */
+.input {
+  display: block;
   width: 100%;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: var(--heading);
+  background: var(--neutral-primary-soft);
+  border: 2px solid var(--border-default);
+  border-radius: 0;
+  padding: 12px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input[type="text"]:focus, input[type="number"]:focus {
+.input::placeholder { color: var(--body-subtle); }
+
+.input:hover { border-color: var(--border-brand-light); }
+
+.input:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--border-brand);
+  box-shadow: 4px 4px 0 0 var(--brand);
 }
 
-label { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+/* ── Checkboxes ─────────────────────────────────────────────────────── */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-default);
+  background: var(--neutral-primary-soft);
+  border-radius: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s, border-color 0.1s;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--brand);
+  border-color: var(--border-brand);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg) translateY(-1px);
+  position: absolute;
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: 2px;
+}
+
+/* ── Select ─────────────────────────────────────────────────────────── */
+select {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: var(--heading);
+  background: var(--neutral-primary-soft);
+  border: 2px solid var(--border-default);
+  border-radius: 0;
+  padding: 6px 8px;
+  transition: border-color 0.2s;
+}
+
+select:focus { outline: none; border-color: var(--border-brand); }
+option { background: var(--neutral-primary-soft); color: var(--heading); }
+
+/* ── Labels ─────────────────────────────────────────────────────────── */
+label {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: var(--body);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.1s;
+}
+
+label:hover { color: var(--heading); }
+
+/* ── Game cards ─────────────────────────────────────────────────────── */
+.game-card {
+  border: 1px solid var(--border-default);
+  background: var(--neutral-primary-medium);
+  box-shadow: var(--brand-ring-shadow);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.game-card:hover { transform: translateY(-4px); }
+
+/* ── Scrollbar ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--neutral-primary-strong); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-brand-subtle); }

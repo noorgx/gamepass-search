@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#0A0118"/>
+  <!-- Outer ring -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#6633FF" stroke-width="2.5"/>
+  <!-- Rainbow rings (brand shadow colors) -->
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#B070FF" stroke-width="1.5" opacity="0.7"/>
+  <circle cx="32" cy="32" r="17" fill="none" stroke="#7DEDA9" stroke-width="1.5" opacity="0.7"/>
+  <!-- Controller cross / search blend -->
+  <!-- Horizontal bar -->
+  <rect x="18" y="30" width="28" height="4" rx="0" fill="#6633FF"/>
+  <!-- Vertical bar -->
+  <rect x="30" y="18" width="4" height="28" rx="0" fill="#6633FF"/>
+  <!-- Search circle overlay (bottom-right) -->
+  <circle cx="40" cy="40" r="8" fill="none" stroke="#7DEDA9" stroke-width="2.5"/>
+  <line x1="46" y1="46" x2="51" y2="51" stroke="#7DEDA9" stroke-width="2.5" stroke-linecap="square"/>
+</svg>

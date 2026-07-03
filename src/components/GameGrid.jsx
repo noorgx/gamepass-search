@@ -4,30 +4,68 @@ export default function GameGrid({ games, total, loading, page, limit, onPageCha
   const totalPages = Math.ceil(total / limit)
 
   return (
-    <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 12 }}>
+    <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--neutral-primary)' }}>
+      {/* Search bar */}
+      <div style={{
+        padding: '14px 24px',
+        borderBottom: '2px solid var(--border-default)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 20,
+        background: 'var(--neutral-primary-soft)',
+        flexShrink: 0,
+      }}>
         <input
+          className="input"
           type="text"
-          placeholder="Search games…"
+          placeholder="Search games"
           value={filters.q}
           onChange={e => onFilterChange('q', e.target.value)}
-          style={{ flex: 1, maxWidth: 400 }}
+          style={{ flex: 1, maxWidth: 360 }}
         />
-        <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-          {loading ? 'Loading…' : `${total} game${total !== 1 ? 's' : ''}`}
+        <span style={{
+          fontFamily: "'VT323', monospace",
+          fontSize: 16,
+          color: 'var(--body-subtle)',
+          whiteSpace: 'nowrap',
+          letterSpacing: 0.5,
+          textTransform: 'uppercase',
+        }}>
+          {loading ? 'Loading' : `${total} Game${total !== 1 ? 's' : ''}`}
         </span>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+      {/* Card grid */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: 32 }}>
         {loading && games.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: 60 }}>Loading…</div>
+          <div style={{
+            fontFamily: "'VT323', monospace",
+            fontSize: 24,
+            color: 'var(--body-subtle)',
+            textAlign: 'center',
+            marginTop: 80,
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+          }}>
+            Loading...
+          </div>
         ) : games.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: 60 }}>No games match your filters.</div>
+          <div style={{
+            fontFamily: "'VT323', monospace",
+            fontSize: 24,
+            color: 'var(--body-subtle)',
+            textAlign: 'center',
+            marginTop: 80,
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+          }}>
+            No games match your filters
+          </div>
         ) : (
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gap: 12,
+            gap: 36,
           }}>
             {games.map(game => (
               <GameCard key={game.id} game={game} onSelect={onSelect} />
@@ -36,13 +74,47 @@ export default function GameGrid({ games, total, loading, page, limit, onPageCha
         )}
       </div>
 
+      {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ padding: '10px 16px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8, justifyContent: 'center' }}>
-          <button onClick={() => onPageChange(page - 1)} disabled={page === 0} style={{ background: '#333' }}>← Prev</button>
-          <span style={{ lineHeight: '30px', fontSize: 13, color: 'var(--text-muted)' }}>
-            Page {page + 1} of {totalPages}
-          </span>
-          <button onClick={() => onPageChange(page + 1)} disabled={page >= totalPages - 1} style={{ background: '#333' }}>Next →</button>
+        <div style={{
+          padding: '14px 24px',
+          borderTop: '2px solid var(--border-default)',
+          display: 'flex',
+          gap: 8,
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: 'var(--neutral-primary-soft)',
+          flexShrink: 0,
+        }}>
+          <button
+            className="btn-page btn-page-label"
+            onClick={() => onPageChange(page - 1)}
+            disabled={page === 0}
+          >
+            Prev
+          </button>
+
+          {/* Nearby pages */}
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            const p = Math.max(0, Math.min(page - 2 + i, totalPages - 5 + i))
+            return p
+          }).filter((p, i, arr) => arr.indexOf(p) === i && p >= 0 && p < totalPages).map(p => (
+            <button
+              key={p}
+              className={`btn-page${p === page ? ' active' : ''}`}
+              onClick={() => onPageChange(p)}
+            >
+              {p + 1}
+            </button>
+          ))}
+
+          <button
+            className="btn-page btn-page-label"
+            onClick={() => onPageChange(page + 1)}
+            disabled={page >= totalPages - 1}
+          >
+            Next
+          </button>
         </div>
       )}
     </main>

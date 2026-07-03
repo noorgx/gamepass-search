@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut } = require('electron')
 const path = require('path')
 const { initDb } = require('../server/db')
 const { startServer } = require('../server/index')
@@ -13,10 +13,16 @@ function getDbPath() {
     : path.join(app.getPath('userData'), 'gamepass.db')
 }
 
+function getCacheDir() {
+  return isDev
+    ? path.join(__dirname, '../image-cache')
+    : path.join(app.getPath('userData'), 'image-cache')
+}
+
 app.whenReady().then(async () => {
   const db = initDb(getDbPath())
   try {
-    await startServer(API_PORT, db)
+    await startServer(API_PORT, db, getCacheDir())
   } catch (err) {
     const { dialog } = require('electron')
     dialog.showErrorBox('Startup Error', `Could not start API server on port ${API_PORT}.\n\n${err.message}`)
@@ -39,6 +45,10 @@ app.whenReady().then(async () => {
 
   if (isDev) {
     win.loadURL('http://localhost:5173')
+    // Ctrl+R / F5 to reload, Ctrl+Shift+I to open DevTools
+    globalShortcut.register('CommandOrControl+R', () => win.webContents.reload())
+    globalShortcut.register('F5',                  () => win.webContents.reload())
+    globalShortcut.register('CommandOrControl+Shift+I', () => win.webContents.toggleDevTools())
   } else {
     win.loadFile(path.join(__dirname, '../dist/index.html'))
   }

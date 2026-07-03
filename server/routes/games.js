@@ -16,9 +16,27 @@ function buildQuery(params) {
       values.push(`%${g.trim()}%`)
     })
   }
+  if (params.genreTag) {
+    params.genreTag.split(',').forEach(g => {
+      conditions.push('genre_tags LIKE ?')
+      values.push(`%"${g.trim()}"%`)
+    })
+  }
+  if (params.genreTagExclude) {
+    params.genreTagExclude.split(',').forEach(g => {
+      conditions.push('(genre_tags IS NULL OR genre_tags NOT LIKE ?)')
+      values.push(`%"${g.trim()}"%`)
+    })
+  }
   if (params.platform) {
     params.platform.split(',').forEach(p => {
       conditions.push('platforms LIKE ?')
+      values.push(`%${p.trim()}%`)
+    })
+  }
+  if (params.platformExclude) {
+    params.platformExclude.split(',').forEach(p => {
+      conditions.push('(platforms IS NULL OR platforms NOT LIKE ?)')
       values.push(`%${p.trim()}%`)
     })
   }
@@ -28,9 +46,21 @@ function buildQuery(params) {
       values.push(`%${m.trim()}%`)
     })
   }
+  if (params.multiplayerExclude) {
+    params.multiplayerExclude.split(',').forEach(m => {
+      conditions.push('(multiplayer IS NULL OR multiplayer NOT LIKE ?)')
+      values.push(`%${m.trim()}%`)
+    })
+  }
   if (params.tier) {
     params.tier.split(',').forEach(t => {
       conditions.push('tier = ?')
+      values.push(t.trim())
+    })
+  }
+  if (params.tierExclude) {
+    params.tierExclude.split(',').forEach(t => {
+      conditions.push('(tier IS NULL OR tier != ?)')
       values.push(t.trim())
     })
   }
@@ -62,6 +92,33 @@ router.get('/', (req, res) => {
   )
 
   res.json({ total, games })
+})
+
+// GET /api/games/genres — aggregate enriched genre counts, respecting current filters
+router.get('/genres', (req, res) => {
+  // Use ALL active filters (including genreTag) so counts are true drilldown counts —
+  // each tag's number shows "how many games match everything you've selected + this tag"
+  const filterParams = { ...req.query }
+  delete filterParams.limit
+  delete filterParams.offset
+
+  const { where, values } = buildQuery(filterParams)
+  const tagFilter = `genre_tags IS NOT NULL AND genre_tags != '[]'`
+  const sql = where
+    ? `SELECT genre_tags FROM games ${where} AND ${tagFilter}`
+    : `SELECT genre_tags FROM games WHERE ${tagFilter}`
+  const rows = req.db.prepare(sql).all(...values)
+
+  const counts = {}
+  for (const row of rows) {
+    try {
+      for (const tag of JSON.parse(row.genre_tags)) counts[tag] = (counts[tag] || 0) + 1
+    } catch (_) {}
+  }
+  const genres = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => ({ name, count }))
+  res.json(genres)
 })
 
 router.get('/:id', (req, res) => {
