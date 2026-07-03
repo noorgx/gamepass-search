@@ -1,7 +1,7 @@
-import express from 'express'
-import request from 'supertest'
-import { initDb } from '../db.js'
-import gamesRouter from './games.js'
+const express = require('express')
+const request = require('supertest')
+const { initDb } = require('../db')
+const gamesRouter = require('./games')
 
 function makeApp(db) {
   const app = express()

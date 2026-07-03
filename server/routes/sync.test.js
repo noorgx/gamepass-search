@@ -1,24 +1,20 @@
-// Mock the sync module FIRST - before any imports
-vi.mock('../sync', () => ({
-  syncCatalog: vi.fn().mockResolvedValue({ added: 5, removed: 1, synced_at: '2026-07-03T10:00:00.000Z' })
-}))
+const express = require('express')
+const request = require('supertest')
+const { initDb } = require('../db')
+const { createSyncRouter } = require('./sync')
 
-import express from 'express'
-import request from 'supertest'
-import { initDb } from '../db.js'
-import syncRouter from './sync.js'
+const mockSyncCatalog = vi.fn().mockResolvedValue({ added: 5, removed: 1, synced_at: '2026-07-03T10:00:00.000Z' })
 
 function makeApp(db) {
   const app = express()
   app.use((req, res, next) => { req.db = db; next() })
-  app.use('/api/sync', syncRouter)
+  app.use('/api/sync', createSyncRouter(mockSyncCatalog))
   return app
 }
 
 describe('POST /api/sync', () => {
   let db, app
-
-  beforeEach(() => { db = initDb(':memory:'); app = makeApp(db) })
+  beforeEach(() => { db = initDb(':memory:'); app = makeApp(db); vi.clearAllMocks() })
   afterEach(() => db.close())
 
   it('returns added/removed/synced_at', async () => {
@@ -27,12 +23,11 @@ describe('POST /api/sync', () => {
     expect(res.body.added).toBe(5)
     expect(res.body.removed).toBe(1)
     expect(res.body.synced_at).toBe('2026-07-03T10:00:00.000Z')
-  }, 10000)
+  })
 })
 
 describe('GET /api/sync/status', () => {
   let db, app
-
   beforeEach(() => { db = initDb(':memory:'); app = makeApp(db) })
   afterEach(() => db.close())
 
